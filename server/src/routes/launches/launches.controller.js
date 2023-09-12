@@ -3,7 +3,9 @@ const { getAllLaunches, addNewLaunch } = require("../../models/launches.model");
 //
 //
 function httpGetAllLaunches(req, res) {
-  return res.status(200).json(Array.from(getAllLaunches.values()));
+  const arr = getAllLaunches();
+
+  return res.status(200).json(Array.from(arr.values()));
 }
 //
 function httpAddNewLaunch(req, res) {
@@ -13,7 +15,7 @@ function httpAddNewLaunch(req, res) {
     !launch.mission ||
     !launch.rocket ||
     !launch.launchDate ||
-    !launch.destination
+    !launch.target
   ) {
     return res.status(400).json({ error: "Missing required launch property" });
   }
