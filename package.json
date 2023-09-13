@@ -11,6 +11,7 @@
     "client": "npm run start --prefix client",
     "watch": "npm run server & npm run client",
     "deploy": "npm run build --prefix client && npm start --prefix server",
+    "deploy-cluster": "npm run build --prefix client && npm run cluster --prefix server",
     "test": "npm test --prefix client && test --prefix server"
   },
   "repository": {
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/MadCoder911/space-api#readme",
   "dependencies": {
+    "mongoose": "^7.5.1",
     "morgan": "^1.10.0"
   }
 }
