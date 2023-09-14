@@ -1,6 +1,6 @@
 const launchesDatabase = require("./launches.mongo");
-const planets = requore("./planets.mongo.js");
-let latestFlightNumber = 100;
+const planets = require("./planets.mongo");
+const DEFAULT_FLIGHT_NUMBER = 101;
 const launches = new Map();
 const launch = {
   flightNumber: 100,
@@ -15,22 +15,25 @@ const launch = {
 launches.set(launch.flightNumber, launch);
 saveLaunch(launch);
 
-function existsLaunchWithId(launcId) {
-  return launches.has(launcId);
+async function existsLaunchWithId(launchId) {
+  return await launchesDatabase.findOne({
+    flightNumber: launchId,
+  });
 }
+async function getLatestFlightNumber() {
+  const latestLaunch = await launchesDatabase.findOne({}).sort("-flightNumber");
+  if (!latestLaunch) {
+    return DEFAULT_FLIGHT_NUMBER;
+  }
 
+  return latestLaunch.flightNumber;
+}
 async function getAllLaunches() {
-  return await launchesDatabase.find({}, { __v: 0, _id: 0 });
+  return await launchesDatabase.find({}, { _id: 0, __v: 0 });
 }
 
 async function saveLaunch(launch) {
-  const planet = await planets.findOne({
-    kepler_name: launch.target,
-  });
-  if (!planet) {
-    throw new Error("No matchingg planet found");
-  }
-  await launchesDatabase.updateOne(
+  await launchesDatabase.findOneAndUpdate(
     {
       flightNumber: launch.flightNumber,
     },
@@ -40,19 +43,27 @@ async function saveLaunch(launch) {
     }
   );
 }
+async function scheduleNewLaunch(launch) {
+  const planet = await planets.findOne({
+    kepler_name: launch.target,
+  });
+  if (!planet) {
+    throw new Error("No matchingg planet found");
+  }
+  const newFlightNum = (await getLatestFlightNumber()) + 1;
+  console.log(newFlightNum);
+  const newLaunch = {
+    ...launch,
+    success: true,
+    upcoming: true,
+    customers: ["ZTM", "NASA"],
+    flightNumber: newFlightNum,
+  };
 
-function addNewLaunch(launch) {
-  latestFlightNumber += 1;
-  launches.set(
-    latestFlightNumber,
-    Object.assign(launch, {
-      success: true,
-      upcoming: true,
-      customer: ["ZTM", "NASA"],
-      flightNumber: latestFlightNumber,
-    })
-  );
+  await saveLaunch(newLaunch);
+  return newLaunch;
 }
+
 function abortLaunchById(launchId) {
   const aborted = launches.get(launchId);
   aborted.upcoming = false;
@@ -61,7 +72,7 @@ function abortLaunchById(launchId) {
 }
 module.exports = {
   getAllLaunches,
-  addNewLaunch,
   existsLaunchWithId,
   abortLaunchById,
+  scheduleNewLaunch,
 };

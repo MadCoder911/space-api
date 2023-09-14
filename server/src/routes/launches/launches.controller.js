@@ -1,17 +1,19 @@
 const {
   getAllLaunches,
-  addNewLaunch,
   existsLaunchWithId,
   abortLaunchById,
+  scheduleNewLaunch,
 } = require("../../models/launches.model");
 
 //
 //
 async function httpGetAllLaunches(req, res) {
-  return await res.status(200).json(getAllLaunches());
+  const launches = await getAllLaunches();
+  return res.status(200).json(launches);
 }
 //
-function httpAddNewLaunch(req, res) {
+//
+async function httpAddNewLaunch(req, res) {
   const launch = req.body;
 
   if (
@@ -28,9 +30,10 @@ function httpAddNewLaunch(req, res) {
   if (isNaN(launch.launchDate)) {
     return res.status(400).json({ error: "Invalid Date" });
   }
-  addNewLaunch(launch);
+  await scheduleNewLaunch(launch);
   return res.status(201).json(launch);
 }
+//
 function httpAbortLaunch(req, res) {
   const launchId = +req.params.id;
   if (!existsLaunchWithId(launchId)) {

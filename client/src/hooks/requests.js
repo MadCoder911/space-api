@@ -6,12 +6,13 @@ async function httpGetPlanets() {
 }
 
 async function httpGetLaunches() {
-  const res = await fetch(`${API_URL}/launches`);
+  const response = await fetch(`${API_URL}/launches`);
+  const fetchedLaunches = await response.json();
 
-  const fetchedLaunches = await res.json();
-  return fetchedLaunches.sort((a, b) => a.flightNumber - b.flightNumber);
+  return fetchedLaunches.sort((a, b) => {
+    return a.flightNumber - b.flightNumber;
+  });
 }
-
 async function httpSubmitLaunch(launch) {
   try {
     let res = await fetch(`${API_URL}/launches`, {
@@ -28,7 +29,6 @@ async function httpSubmitLaunch(launch) {
       ok: false,
     };
   }
-  // Submit given launch data to launch system.
 }
 
 async function httpAbortLaunch(id) {
@@ -41,4 +41,4 @@ async function httpAbortLaunch(id) {
   }
 }
 
-export { httpGetPlanets, httpGetLaunches, httpSubmitLaunch, httpAbortLaunch };
+export { httpGetPlanets, httpSubmitLaunch, httpAbortLaunch, httpGetLaunches };

@@ -45,13 +45,15 @@ function loadPlanetsData() {
 }
 
 async function getAllPlanets() {
-  return await planets.find(
+  const planetss = await planets.find(
     {},
     {
       __v: 0,
       _id: 0,
     }
   );
+
+  return planetss;
 }
 async function savePlanet(planet) {
   try {
