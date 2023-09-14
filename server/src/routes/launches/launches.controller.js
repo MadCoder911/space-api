@@ -7,10 +7,8 @@ const {
 
 //
 //
-function httpGetAllLaunches(req, res) {
-  const arr = getAllLaunches();
-
-  return res.status(200).json(Array.from(arr.values()));
+async function httpGetAllLaunches(req, res) {
+  return await res.status(200).json(getAllLaunches());
 }
 //
 function httpAddNewLaunch(req, res) {
