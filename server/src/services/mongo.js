@@ -14,4 +14,4 @@ async function mongoConnect() {
 async function mongoDisconnect() {
   await mongoose.disconnect();
 }
-module.expors = { mongoConnect, mongoDisconnect };
+module.exports = { mongoConnect, mongoDisconnect };

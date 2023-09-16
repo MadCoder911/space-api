@@ -5,8 +5,8 @@ const {
   httpAddNewLaunch,
   httpAbortLaunch,
 } = require("./launches.controller");
-launchesRouter.get("/launches", httpGetAllLaunches);
-launchesRouter.post("/launches", httpAddNewLaunch);
-launchesRouter.delete("/launches/:id", httpAbortLaunch);
+launchesRouter.get("/", httpGetAllLaunches);
+launchesRouter.post("/", httpAddNewLaunch);
+launchesRouter.delete("/:id", httpAbortLaunch);
 
 module.exports = launchesRouter;
