@@ -6,14 +6,14 @@ const {
 } = require("../../models/launches.model");
 const { getPagination } = require("../../services/query");
 //
-//
+//Getting launches for the databse
 async function httpGetAllLaunches(req, res) {
   const { skip, limit } = getPagination(req.query);
   const launches = await getAllLaunches(skip, limit);
   return res.status(200).json(launches);
 }
 //
-//
+//Adding a new launch
 async function httpAddNewLaunch(req, res) {
   const launch = req.body;
 
@@ -35,6 +35,7 @@ async function httpAddNewLaunch(req, res) {
   return res.status(201).json(launch);
 }
 //
+//Aborting a launch
 async function httpAbortLaunch(req, res) {
   const launchId = +req.params.id;
   const launch = await existsLaunchWithId(launchId);
