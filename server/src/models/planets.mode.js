@@ -14,7 +14,7 @@ function isHabitablePlanet(planet) {
     planet["koi_prad"] < 1.6
   );
 }
-// New promise
+// New promise to ready planet names from local file and push it to mongo
 function loadPlanetsData() {
   return new Promise((resolve, reject) => {
     fs.createReadStream(
@@ -43,7 +43,7 @@ function loadPlanetsData() {
       });
   });
 }
-
+//Getting all planets from the DB
 async function getAllPlanets() {
   const planetss = await planets.find(
     {},
@@ -55,6 +55,7 @@ async function getAllPlanets() {
 
   return planetss;
 }
+//Saving planets to the DB
 async function savePlanet(planet) {
   try {
     await planets.updateOne(
