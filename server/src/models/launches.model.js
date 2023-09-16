@@ -7,6 +7,7 @@ const DEFAULT_FLIGHT_NUMBER = 100;
 
 const SPACEX_API_URL = "https://api.spacexdata.com/v4/launches/query";
 
+//Getting launches from SpaxeX Api
 async function populateLaunches() {
   console.log("Downloading launch data...");
   const response = await axios.post(SPACEX_API_URL, {
@@ -57,7 +58,7 @@ async function populateLaunches() {
     await saveLaunch(launch);
   }
 }
-
+//Loading launches data from our database
 async function loadLaunchesData() {
   const firstLaunch = await findLaunch({
     flightNumber: 1,
@@ -66,21 +67,22 @@ async function loadLaunchesData() {
   });
   if (firstLaunch) {
     console.log("Launch data already loaded!");
+    return;
   } else {
     await populateLaunches();
   }
 }
-
+//Finding launches by filtering
 async function findLaunch(filter) {
   return await launchesDatabase.findOne(filter);
 }
-
+//Checking launches using ID
 async function existsLaunchWithId(launchId) {
   return await findLaunch({
     flightNumber: launchId,
   });
 }
-
+//Getting latest flight number
 async function getLatestFlightNumber() {
   const latestLaunch = await launchesDatabase.findOne().sort("-flightNumber");
 
@@ -90,7 +92,7 @@ async function getLatestFlightNumber() {
 
   return latestLaunch.flightNumber;
 }
-
+//Requesting all launchies with pagination settings
 async function getAllLaunches(skip, limit) {
   return await launchesDatabase
     .find({}, { _id: 0, __v: 0 })
@@ -98,7 +100,7 @@ async function getAllLaunches(skip, limit) {
     .skip(skip) //how many documents to skip
     .limit(limit); //maximum documents number
 }
-
+//Saving launches to the database
 async function saveLaunch(launch) {
   await launchesDatabase.findOneAndUpdate(
     {
@@ -110,7 +112,7 @@ async function saveLaunch(launch) {
     }
   );
 }
-
+//Adding a new launches to current launches in the DB
 async function scheduleNewLaunch(launch) {
   const planet = await planets.findOne({
     kepler_name: launch.target,
@@ -131,7 +133,7 @@ async function scheduleNewLaunch(launch) {
 
   await saveLaunch(newLaunch);
 }
-
+//Aborting a launch from the DB using its ID
 async function abortLaunchById(launchId) {
   const aborted = await launchesDatabase.updateOne(
     {
