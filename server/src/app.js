@@ -11,9 +11,11 @@ app.use(
 );
 app.use(morgan("combined"));
 app.use(express.json());
+// ??
 app.use(express.static(path.join(__dirname, "..", "public")));
+//Versioning paths
 app.use("/v1", api);
-
+//Render Frontend
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
