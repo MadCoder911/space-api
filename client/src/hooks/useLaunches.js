@@ -31,8 +31,6 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
         target,
       });
 
-      // TODO: Set success based on response.
-      const success = false;
       if (response.ok === true) {
         setPendingLaunch(true);
         getLaunches();
@@ -52,8 +50,6 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
     async (id) => {
       const response = await httpAbortLaunch(id);
 
-      // TODO: Set success based on response.
-      const success = false;
       if (response.ok) {
         getLaunches();
         onAbortSound();
