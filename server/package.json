@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
-    "test-watch": "jest --watch",
+    "test": "jest --config ./test.config.js --no-cache --forceExit --detectOpenHandles",
+    "test-watch": "jest --watch --no-cache",
     "start": "nodemon src/server.js",
     "cluster": "pm2 start src/server.js -i max"
   },
@@ -20,10 +20,10 @@
     "csv-parse": "^5.5.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jest": "29.3",
     "pm2": "^5.3.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3"
   }
